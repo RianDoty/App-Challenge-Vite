@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="HydrogenIcon.svg"
+   inkscape:export-filename="MakeConnectionIcon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="1"
+     inkscape:cx="119"
+     inkscape:cy="172.5"
+     inkscape:window-width="2400"
+     inkscape:window-height="1261"
+     inkscape:window-x="3191"
+     inkscape:window-y="229"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="68"
+       y="95"
+       width="369"
+       height="356"
+       id="rect6" />
+    <rect
+       x="55"
+       y="77"
+       width="418"
+       height="362"
+       id="rect5" />
+    <rect
+       x="35"
+       y="87"
+       width="433"
+       height="332"
+       id="rect4" />
+    <rect
+       x="91"
+       y="50"
+       width="340"
+       height="350"
+       id="rect3" />
+    <rect
+       x="67"
+       y="73"
+       width="364"
+       height="374"
+       id="rect2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:416.917px;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke-width:2.17144"
+       x="101.98908"
+       y="402"
+       id="text6"><tspan
+         sodipodi:role="line"
+         id="tspan6"
+         x="101.98908"
+         y="402"
+         style="stroke-width:2.17144">H</tspan></text>
+  </g>
+</svg>

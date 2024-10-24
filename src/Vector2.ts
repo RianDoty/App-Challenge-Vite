@@ -63,6 +63,7 @@ export class Vector2 {
     )
   }
 
+  // BUG: This only works if the upper-left corner of the canvas is the same as the upper-left corner of the window (mostly.)
   static toCanvasSpace(v: Vector2): Vector2 {
     return Vector2.add(v, origin);
   }

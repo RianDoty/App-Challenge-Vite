@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./styles.css";
+import "./canvas";
+import { AtomSelector, Editor } from "./Editor";
+import { useEffect, useRef, useState } from "react";
+import { setupCanvas } from "./canvas";
+import { Hydrogen, Oxygen } from "./chemistry/chemclasses";
+import { EditorAction, EditorScene, NodeEditor } from "./chemistry/editor";
+import { InfoTab } from "./Info";
+import { GravityWell, NodeRepulsion } from "./classes";
 
-function App() {
-  const [count, setCount] = useState(0)
+
+const atomScene = new EditorScene();
+const atom = new Hydrogen();
+const editor = new NodeEditor(atomScene);
+const repulsion = new NodeRepulsion({strength: 50000})
+const centerWell = new GravityWell(0, 0, 10)
+
+atomScene.addForce(centerWell, repulsion)
+editor.addNodes([atom])
+editor.setAction(EditorAction.Drag, 0)
+atomScene.add([atom, editor])
+
+
+export default function App() {
+  const [sidebarOut, setOut] = useState(true)
+  const ref = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const IDHolder = setupCanvas(ref.current, atomScene);
+      return () => cancelAnimationFrame(IDHolder.renderID);
+    }
+  }, [ref.current]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="fillscreen">
+      <div className={`fillscreen atom-selector-shift${sidebarOut? ' sidebar-shift': ''}`}>
+        <canvas id="game" ref={ref}></canvas>
+        <div className="editor-container">
+          <Editor editor={editor}></Editor>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className={`fillscreen ${sidebarOut? 'sidebar-shift' : ''}`}>
+        <AtomSelector editor={editor}/>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <InfoTab editor={editor} out={sidebarOut} setOut={setOut} />
+    </div>
+  );
 }
-
-export default App

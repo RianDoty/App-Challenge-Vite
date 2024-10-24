@@ -1,6 +1,5 @@
 import { Atom } from "./chemistry/chemclasses"
 
-
 export class Counter {
     c: {[key: string]: number}
 
@@ -45,7 +44,7 @@ export class Matrix {
     width: number
     height: number
 
-    constructor(width: number, height: number, m: number[][]) {
+    constructor(width: number, height: number, m?: number[][]) {
         this.width = Math.floor(width)
         this.height = Math.floor(height)
 
@@ -54,7 +53,7 @@ export class Matrix {
         } else {
             this.m = new Array(this.height)
             for (let y = 0; y < this.height; y++) {
-                const row = new Array(this.width)
+                const row = new Array(this.width).fill(0)
                 this.m[y] = row
             }
         }
@@ -65,12 +64,6 @@ export class Matrix {
         const height = m.length
         const width = m[0].length
         return new Matrix(width, height, m)
-    }
-
-    static fromMolecule(root: Atom) {
-        const molec = root.getMolecule()
-
-        
     }
 
     // Here because the whole reverse-indexing thing is weird.
@@ -103,5 +96,100 @@ export class Matrix {
         const col2 = m2.sumColumns()
 
         return  Counter.equal(rows1, rows2) && Counter.equal(col1, col2)
+    }
+}
+
+export class MoleculeComparisonMatrix {
+    matrices: {[key: string]: Matrix}
+
+    constructor() {
+        this.matrices = {}
+    }
+
+    static fromMolecule(m: Set<Atom>): MoleculeComparisonMatrix {
+        const width = m.size
+
+        // Split up the molecule into sets of each label.
+        const byLabel: {[label: string]: Set<Atom>} = {}
+        m.forEach(a => {
+            if (byLabel[a.label]) {
+                byLabel[a.label].add(a)
+            } else {
+                byLabel[a.label] = new Set([a])
+            }
+        })
+
+        // Make a map from each atom to their columns in the table, to keep things consistent.
+        const columnMap = new Map<Atom, number>()
+        let i = 0;
+        m.forEach(a => {
+            columnMap.set(a, i)
+            i++;
+        })
+
+        const out = new MoleculeComparisonMatrix()
+        
+        // For each label, add a new matrix in the comparison matrix.
+        Object.entries(byLabel).forEach(([label, atoms]) => {
+            const labelMatrix = new Matrix(width, atoms.size)
+            out.matrices[label] = labelMatrix
+
+            // for each atom in the atoms set
+            for (const [y, a1] of Array.from(atoms).entries()) {
+                // For each atom in the column map, if this atom is connected to that atom, write a 1.
+                // otherwise, write a 0.
+                for (const [a2, x] of columnMap.entries()) {
+                    if (a1.connectedTo.has(a2)) {
+                        labelMatrix.m[y][x] = 1
+                    } else {
+                        labelMatrix.m[y][x] = 0
+                    }
+                }
+            }
+        })
+
+        // We're done!
+        return out
+    }
+
+    matrix(label:string) {
+        return this.matrices[label]
+    }
+
+    has(label: string) {
+        return !!this.matrices[label]
+    }
+
+    static compare(mcm1: MoleculeComparisonMatrix, mcm2: MoleculeComparisonMatrix) {
+        // Get the row and column sums from each comparison matrix.
+        for (const [label, matrix] of Object.entries(mcm1.matrices)) {
+            if (!mcm2.has(label)) return false;
+
+            // We know both comparison matrices have this label. Test for transposability between them.
+            if (!Matrix.areTransposable(matrix, mcm2.matrix(label))) return false;
+        }
+
+        for (const [label, matrix] of Object.entries(mcm2.matrices)) {
+            if (!mcm1.has(label)) return false;
+
+            // We know both comparison matrices have this label. Test for transposability between them.
+            if (!Matrix.areTransposable(matrix, mcm1.matrix(label))) return false;
+        }
+        return true
+    }
+
+    toJSON() {
+        return JSON.stringify(this.matrices)
+    }
+
+    static fromJSON(json: string) {
+        const out = new MoleculeComparisonMatrix()
+        const m = JSON.parse(json) as {[label: string]: Matrix}
+        // Revive baby!
+        for (const [label, matrix] of Object.entries(m)) {
+            m[label] = new Matrix(matrix.width, matrix.height, matrix.m)
+        }
+        out.matrices = m
+        return out
     }
 }

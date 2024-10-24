@@ -233,6 +233,12 @@ export class GraphNode extends Renderable {
   destroy() {}
 
   tick(ms: number) {
+
+    // Damping = (dampingConstant)% m/s^2
+    const dampingConstant = 10
+    const damping = Vector2.scale(this.velocity, -1 * dampingConstant * ms / 1000)
+    this.velocity = Vector2.add(this.velocity, damping)
+
     const delta = Vector2.scale(this.velocity, ms / 1000);
     this.position = Vector2.add(this.position, delta);
   }
@@ -281,6 +287,7 @@ export class Connection extends Renderable {
   to: GraphNode;
   target: number;
   dashed: boolean;
+  z = -999;
 
   constructor(
     from: GraphNode,
@@ -415,6 +422,7 @@ export class DesiredConnection extends Renderable {
 }
 
 // Makes nodes added to it want to move towards its center
+// not actually gravity, more like a spring
 export class GravityWell extends Force {
   position: Vector2;
   declare toApply: Set<GraphNode>
@@ -442,20 +450,14 @@ export class GravityWell extends Force {
       let offset = Vector2.sub(node.position, this.position);
       const distance = Vector2.mag(offset);
 
-      const damping = 0.2;
-      const mass = 0.01;
-
-      const springAcc = Vector2.scale(
+      const acc = Vector2.scale(
         Vector2.unit(offset),
         -1 * this.strength * distance
       );
-      const dampingAcc = Vector2.scale(node.velocity, -1 * damping);
-
-      const acc = Vector2.add(springAcc, dampingAcc);
 
       node.velocity = Vector2.add(
         node.velocity,
-        Vector2.scale(acc, ms / 1000 / mass)
+        Vector2.scale(acc, ms / 1000)
       );
     });
   }

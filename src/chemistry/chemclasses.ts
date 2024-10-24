@@ -64,6 +64,7 @@ export class Atom extends GraphNode {
     // Gets an array of all molecules connected to this.
     getMolecule(): Set<Atom> {
         function getMoleculeRecursive(atom: Atom, seen: Set<Atom>) {
+            seen.add(atom)
             for (const a of atom.connectedTo) {
                 if (seen.has(a)) continue
                 seen.add(a)
@@ -73,6 +74,64 @@ export class Atom extends GraphNode {
         }
 
         return getMoleculeRecursive(this, new Set<Atom>())
+    }
+
+    // Adds a LoneElectron, or combines two into a PairedElectron (if this has at least 4 electrons.)
+    addElectron() {
+        const electrons = Array.from(this.children).filter(r => r instanceof LoneElectron)
+        if (electrons.length < 4) {
+            // Less than 4; we're not pairing yet, so just add.
+            const newElectron = new LoneElectron()
+            this.addChild(newElectron)
+        } else {
+            // More than 4; we start pairing.
+            // this is a jank as hell condition; if i had the energy to change it i would
+            const toPair = electrons.find(e => (e instanceof LoneElectron) && !(e instanceof ElectronPair))
+            if (toPair) {
+                const newPair = new ElectronPair()
+                newPair.position = Vector2.copy(toPair.position)
+
+                this.deleteChild(toPair)
+                this.addChild(newPair)
+            } else {
+                // no pair, so just add.
+                const newElectron = new LoneElectron()
+                this.addChild(newElectron)
+            }
+        }
+    }
+
+    tick(ms: number) {
+        super.tick(ms)
+        this.children.forEach(c => {
+            if (c instanceof Orbital) {
+                this.children.forEach(c2 => {
+                    if (c2 instanceof Orbital && c != c2) {
+                        // If the positions are the same, randomize.
+                        if (c.position.x == c2.position.x && c.position.y == c2.position.y) {
+                            c.position = Vector2.add(c.position, new Vector2(1, 1))
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    // Try to remove a single first, if not, split up a double.
+    removeElectron() {
+        const electrons = Array.from(this.children).filter(r => r instanceof LoneElectron)
+        const singleElectron = electrons.find(r => !(r instanceof ElectronPair))
+        const pairedElectron = electrons.find(r => r instanceof ElectronPair)
+
+        if (singleElectron) {
+            this.deleteChild(singleElectron)
+        } else if (pairedElectron) {
+            const newSingle = new LoneElectron()
+            newSingle.position = Vector2.copy(pairedElectron.position)
+            newSingle.velocity = Vector2.copy(pairedElectron.velocity)
+            this.deleteChild(pairedElectron)
+            this.addChild(newSingle)
+        }
     }
 }
 
@@ -248,3 +307,30 @@ export class Oxygen extends Atom {
         orbitals.forEach(o => this.addChild(o));
     }
 }
+
+// "C".
+export class Carbon extends Atom {
+    constructor(x?:number, y?:number, size?:number) {
+        super(x,y,size,'C')
+
+        const orbitals = [new LoneElectron(), new LoneElectron(), new LoneElectron(), new LoneElectron()];
+        orbitals.forEach(o => this.addChild(o));
+    }
+}
+
+//"N"
+export class Nitrogen extends Atom {
+    constructor(x?:number, y?:number, size?:number) {
+        super(x,y,size,'N')
+
+        const orbitals = [new LoneElectron(), new LoneElectron(), new LoneElectron(), new ElectronPair()];
+        orbitals.forEach(o => this.addChild(o));
+    }
+}
+
+export const atomMap: { [key: number]: typeof Atom; } = {
+    1: Hydrogen,
+    6: Carbon,
+    7: Nitrogen,
+    8: Oxygen
+};

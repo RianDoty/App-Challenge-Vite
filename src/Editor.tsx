@@ -2,11 +2,10 @@ import "./App.css";
 import React, { ReactNode, useEffect, useState } from "react";
 import { EditorAction, NodeEditor } from "./chemistry/editor";
 
-import hydrogenIcon from './assets/HydrogenIcon.svg'
-import pointingHandIcon from './assets/DragIcon.svg'
-import makeConnectionIcon from "./assets/MakeConnectionIcon.svg"
-import TrashCanIcon from "./assets/TrashCanIcon.svg"
-import magnifyingGlass from './assets/magnifyingGlass.png'
+import pointingHandIcon from '/assets/DragIcon.svg'
+import makeConnectionIcon from "/assets/MakeConnectionIcon.svg"
+import TrashCanIcon from "/assets/TrashCanIcon.svg"
+import magnifyingGlass from '/assets/magnifyingGlass.png'
 
 function EditorButton({
   onClick,

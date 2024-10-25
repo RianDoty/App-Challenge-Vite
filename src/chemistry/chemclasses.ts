@@ -1,6 +1,5 @@
 import { Force, GraphNode, Renderable } from "../classes";
 import { Vector2 } from "../Vector2";
-import { EditorScene } from "./editor";
 
 export class OrbitalRepulsion extends Force {
     declare toApply: Set<Orbital>;
@@ -85,7 +84,7 @@ export class Atom extends GraphNode {
             this.addChild(newElectron)
         } else {
             // More than 4; we start pairing.
-            // this is a jank as hell condition; if i had the energy to change it i would
+            // this is a jank as heck condition; if i had the energy to change it i would
             const toPair = electrons.find(e => (e instanceof LoneElectron) && !(e instanceof ElectronPair))
             if (toPair) {
                 const newPair = new ElectronPair()

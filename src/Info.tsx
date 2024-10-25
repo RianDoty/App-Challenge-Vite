@@ -3,9 +3,9 @@
 // Otherwise, the tab is normally stuck into the right, and can be opened
 // by clicking on it.
 
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NodeEditor } from "./chemistry/editor";
-import magnifyingGlassIcon from './assets/magnifyingGlass.png'
+import magnifyingGlassIcon from '/assets/magnifyingGlass.png'
 import AtomInfo from "./chemistry/atomInfo/AtomInfo";
 import * as atomPages from './chemistry/atomInfo/allAtoms'
 

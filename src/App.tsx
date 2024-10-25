@@ -3,7 +3,7 @@ import "./canvas";
 import { AtomSelector, Editor } from "./Editor";
 import { useEffect, useRef, useState } from "react";
 import { setupCanvas } from "./canvas";
-import { Hydrogen, Oxygen } from "./chemistry/chemclasses";
+import { Hydrogen } from "./chemistry/chemclasses";
 import { EditorAction, EditorScene, NodeEditor } from "./chemistry/editor";
 import { InfoTab } from "./Info";
 import { GravityWell, NodeRepulsion } from "./classes";

@@ -1,5 +1,5 @@
 import { Vector2 } from "./Vector2";
-import { Connection, GraphNode, NodeGroup } from "./classes";
+import { Connection, GraphNode } from "./classes";
 
 interface NodesData {
   nodes: { label: number; center: Vector2 }[];

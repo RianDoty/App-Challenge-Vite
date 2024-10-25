@@ -1,5 +1,5 @@
 import { Renderable, Scene, GraphNode, NodeGroup, NodeRepulsion, Force, Connection } from "../classes";
-import { Atom, atomMap, LoneElectron, OrbitalRepulsion } from "./chemclasses";
+import { Atom, atomMap, OrbitalRepulsion } from "./chemclasses";
 import { subscribe, unsubscribe } from "../minpubsub"
 import { Mouse } from '../Mouse'
 import { Vector2 } from "../Vector2";
@@ -127,20 +127,20 @@ export class EditorScene extends Scene {
 
     onHeirarchyChange(): void {
         super.onHeirarchyChange()
-        this.checkForNewAtoms()
+        // this.checkForNewAtoms()
     }
 
     // For all Atoms in this Scene,
     // check if the molecule they are a part of
     // matches one that we have an explanation for.
-    checkForNewAtoms() {
-        const atoms = this.getAllOfType(Atom)
-        const seen = new Set<Atom>()
+    // checkForNewAtoms() {
+    //     const atoms = this.getAllOfType(Atom)
+    //     const seen = new Set<Atom>()
 
-        for(const atom of atoms) {
+    //     for(const atom of atoms) {
         
-        }
-    }
+    //     }
+    // }
 }
 
 // Repulsion that forces atoms back into the defined box.
@@ -217,7 +217,7 @@ export class AddHandler extends ActionHandler {
     atomType: typeof Atom
     clickHandle: any
 
-    constructor(editor: NodeEditor, atom: keyof typeof atomMap) {
+    constructor(_editor: NodeEditor, atom: keyof typeof atomMap) {
         super()
         // Get the atom type from atomMap, and make a new atom of that type.
         this.atomType = atomMap[atom]

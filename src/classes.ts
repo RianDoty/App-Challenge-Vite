@@ -1,4 +1,4 @@
-import { Atom } from "./chemistry/chemclasses";
+
 import { Vector2 } from "./Vector2";
 
 // X and Y point to center of node
